@@ -1,0 +1,14 @@
+name: Recordatorios de Fierro
+# Llama cada 10 min al endpoint que manda los avisos de comidas no registradas.
+# El endpoint es idempotente: un aviso por comida y por día.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: |
+          curl -fsS --max-time 60 "https://fierro-wheat.vercel.app/api/cron/reminders" -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
